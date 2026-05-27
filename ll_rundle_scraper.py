@@ -30,7 +30,7 @@ PASSWORD = getpass.getpass("LL password: ")
 SEASON      = 108          # e.g. 108 for LL108
 NUM_DAYS    = 25           # match days per season
 NUM_QUESTIONS = 6          # questions per match day
-RUNDLE_NAME = "A_Nebula"  # as it appears in the URL, e.g. "A_Nebula", "B_Andromeda"
+RUNDLE_NAME = "B_Nebula"  # as it appears in the URL, e.g. "A_Nebula", "B_Andromeda"
 
 DELAY = 0.5  # seconds between requests — be polite to the server
 # ───────────────────────────────────────────────────────────────────────────────
@@ -85,11 +85,8 @@ def parse_matchday(soup, match_day: int) -> dict:
         if name_cell is None:
             continue
 
-        # The abbreviated name is the text node after the <a> tag
-        # e.g. "&nbsp;SchE" -> "SchE"
-        name_text = name_cell.get_text(strip=True)
-        # get_text collapses the img/flag, leaving just the abbrev
-        player = name_text.strip()
+        img = name_cell.find("img")
+        player = img["alt"]
 
         if player:
             results[player] = answers
@@ -168,5 +165,7 @@ if __name__ == "__main__":
     #       json.dump(data, f, indent=2)
 
     import json
-    with open("rundle_data.json", "w") as f:
+    import os
+    DATA_FILE = os.path.join(os.path.dirname(__file__), "rundle_data.json")
+    with open(DATA_FILE, "w") as f:
         json.dump(data, f, indent=2)
