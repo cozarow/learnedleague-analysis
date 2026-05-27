@@ -10,6 +10,7 @@ Load data:
 """
 
 import json
+import os
 from itertools import combinations
 
 
@@ -65,6 +66,17 @@ def all_pairwise_agreements(data: dict) -> dict:
 
     return result
 
+def average_agreement(agreements: dict) -> list:
+    """
+    For each player, compute their average pairwise agreement with all others.
+    Returns a list of (player, avg_agreement) sorted descending.
+    """
+    result = []
+    for player, others in agreements.items():
+        vals = [v for v in others.values() if v is not None]
+        avg = sum(vals) / len(vals) if vals else None
+        result.append((player, avg))
+    return sorted(result, key=lambda x: x[1], reverse=True)
 
 def print_agreement_matrix(agreements: dict):
     """
@@ -121,20 +133,25 @@ def least_similar_pairs(agreements: dict, n: int = 10) -> list:
 
 
 if __name__ == "__main__":
-    with open("rundle_data.json") as f:
+    DATA_FILE = os.path.join(os.path.dirname(__file__), "rundle_data.json")
+    with open(DATA_FILE) as f:
         data = json.load(f)
 
     # --- Single pair ---
-    p1, p2 = "SchE", "KeJ4"   # example
-    agreement = pairwise_agreement(data, p1, p2)
-    print(f"Agreement between {p1} and {p2}: {agreement:.1%}\n")
+    # p1, p2 = "SchE", "KeJ4"   # example
+    # agreement = pairwise_agreement(data, p1, p2)
+    # print(f"Agreement between {p1} and {p2}: {agreement:.1%}\n")
 
     # --- Single person ---
-    p1 = "OrdP" #example
-    print(f"Agreement between {p1} and others: {one_pairwise_agreement(data, p1)}\n")
+    # p1 = "OrdP" #example
+    # print(f"Agreement between {p1} and others: {one_pairwise_agreement(data, p1)}\n")
 
     # --- All pairs ---
     agreements = all_pairwise_agreements(data)
+
+    print("Average agreement:")
+    for player, avg in average_agreement(agreements):
+        print(f"  {player:<12} {avg:.1%}")
 
     print("Top 10 most similar pairs:")
     for (a, b), val in most_similar_pairs(agreements, n=10):
