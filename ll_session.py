@@ -24,25 +24,46 @@ Requirements:
     python -m playwright install chromium
 """
 
+import random
+import time
+
 from bs4 import BeautifulSoup
-from playwright.sync_api import sync_playwright, TimeoutError as PWTimeout
+from playwright.sync_api import sync_playwright, Error as PWError, TimeoutError as PWTimeout
 from playwright_stealth import Stealth
 
 BASE_URL  = "https://learnedleague.com"
 LOGIN_URL = f"{BASE_URL}/ucp.php?mode=login"
 
 
+class RateLimitedError(Exception):
+    """Raised when the site appears to be blocking or rate-limiting us."""
+
+
 class LearnedLeagueSession:
-    def __init__(self, headless: bool = True):
+    def __init__(self, headless: bool = False, offscreen: bool = True):
         """
-        headless=True  -> invisible browser (normal use)
-        headless=False -> visible browser window (useful for debugging)
+        headless=True   -> invisible browser. NOTE: learnedleague.com's
+                            Cloudflare protection currently 403s headless
+                            Chromium outright, so this will fail to log in.
+                            Kept as an option in case that changes.
+        headless=False  -> real (headed) browser window, which Cloudflare
+                            allows through. This is required for login to
+                            work right now.
+        offscreen=True  -> (only matters when headless=False) positions the
+                            browser window off-screen so it doesn't steal
+                            focus or interrupt whatever else you're doing.
+                            Set to False if you want to watch it for
+                            debugging.
         """
         self.headless  = headless
         self.logged_in = False
 
+        launch_args = []
+        if not headless and offscreen:
+            launch_args.append("--window-position=-32000,-32000")
+
         self._pw      = sync_playwright().start()
-        self._browser = self._pw.chromium.launch(headless=self.headless)
+        self._browser = self._pw.chromium.launch(headless=self.headless, args=launch_args)
         self._context = self._browser.new_context(
             user_agent=(
                 "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
@@ -106,11 +127,37 @@ class LearnedLeagueSession:
     # ------------------------------------------------------------------
     # Fetching (reuses the same authenticated browser context)
     # ------------------------------------------------------------------
-    def get_html(self, url: str) -> str:
-        """Navigate to a URL and return the page HTML."""
+    def get_html(self, url: str, max_retries: int = 5) -> str:
+        """
+        Navigate to a URL and return the page HTML.
+
+        If the request comes back with an error status (or fails outright),
+        that's treated as a possible rate limit / block: wait 10-15 minutes
+        and retry, up to max_retries times, before raising RateLimitedError.
+        """
         self._require_login()
-        self._page.goto(url, wait_until="networkidle", timeout=30_000)
-        return self._page.content()
+
+        for attempt in range(max_retries + 1):
+            try:
+                resp = self._page.goto(url, wait_until="networkidle", timeout=30_000)
+                status = resp.status if resp else None
+            except PWError:
+                status = None
+
+            if status is not None and status < 400:
+                return self._page.content()
+
+            if attempt == max_retries:
+                raise RateLimitedError(
+                    f"Giving up on {url} after {max_retries} retries (last status={status})"
+                )
+
+            wait_s = random.uniform(10 * 60, 15 * 60)
+            print(
+                f"  [possible rate limit] status={status} for {url} -- "
+                f"sleeping {wait_s / 60:.1f} min before retry {attempt + 1}/{max_retries}"
+            )
+            time.sleep(wait_s)
 
     def get_soup(self, url: str, parser: str = "lxml") -> BeautifulSoup:
         """Navigate to a URL and return a BeautifulSoup object."""

@@ -100,6 +100,7 @@ def scrape_rundle(
     rundle_name: str,
     num_days: int = NUM_DAYS,
     num_questions: int = NUM_QUESTIONS,
+    delay: float = DELAY,
 ) -> dict:
     """
     Scrape all match days for a rundle and return:
@@ -127,7 +128,7 @@ def scrape_rundle(
                     all_data[player] = [None] * (day - 1) * num_questions
                 all_data[player].extend(answers)
 
-        time.sleep(DELAY)
+        time.sleep(delay)
 
     # Sanity check
     expected = num_days * num_questions
@@ -136,6 +137,20 @@ def scrape_rundle(
             print(f"  Warning: {player} has {len(answers)} entries (expected {expected})")
 
     return all_data
+
+
+def discover_rundles(ll: LearnedLeagueSession, season: int) -> list:
+    """
+    Discover every rundle name for a season (e.g. "A_Aloha", "B_Andromeda", ...)
+    by parsing the season's "all rundles" page.
+    """
+    soup = ll.get_soup(f"{BASE_URL}/allrundles.php?{season}")
+    prefix = f"/standings.php?{season}&"
+    return sorted({
+        a["href"][len(prefix):]
+        for a in soup.find_all("a", href=True)
+        if a["href"].startswith(prefix)
+    })
 
 
 def print_summary(data: dict):
