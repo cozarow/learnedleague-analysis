@@ -151,7 +151,7 @@ def print_summary(data: dict):
 
 
 if __name__ == "__main__":
-    ll = LearnedLeagueSession()
+    ll = LearnedLeagueSession(headless=False)
     ll.login(USERNAME, PASSWORD)
 
     print(f"\nScraping LL{SEASON} — {RUNDLE_NAME} ({NUM_DAYS} match days x {NUM_QUESTIONS} questions)\n")
