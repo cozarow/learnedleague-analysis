@@ -8,11 +8,14 @@ A full season has 1000+ rundles, so this can take several hours. Progress
 is saved after every single rundle finishes, so it's safe to interrupt
 (Ctrl+C) and rerun: already-scraped rundles are skipped automatically.
 
-If a page request looks like it's being rate-limited or blocked, the
-underlying session (see ll_session.py) already waits 10-15 minutes and
-retries a few times on its own. If it still can't get through after that,
-this script stops (progress already saved) so you can look into it and
-rerun later.
+If a page request looks like it's being rate-limited or blocked (including
+a "soft" block: a normal-looking 200 OK page that isn't actually the real
+standings page), the underlying session (see ll_session.py) already waits
+10-15 minutes and retries a few times on its own. If a rundle still can't
+get through after that, this script logs it, skips that rundle entirely
+(so a partially-blocked fetch never gets saved as if it were complete),
+and moves on to the rest. Skipped rundles are listed at the end and will
+be retried automatically the next time you run this script.
 
 Output format (rundle_data.json):
     {
@@ -100,29 +103,36 @@ def main():
     print(f"Found {len(rundles)} rundles total. "
           f"{len(rundles) - len(remaining)} already done, {len(remaining)} to go.\n")
 
+    skipped = []
     try:
         for i, rundle_name in enumerate(remaining, 1):
             print(f"[{i}/{len(remaining)}] Scraping rundle {rundle_name} ...")
 
-            state["rundles"][rundle_name] = scrape_rundle(
-                ll,
-                season=SEASON,
-                rundle_name=rundle_name,
-                num_days=NUM_DAYS,
-                num_questions=NUM_QUESTIONS,
-                delay=DELAY,
-            )
+            try:
+                rundle_data = scrape_rundle(
+                    ll,
+                    season=SEASON,
+                    rundle_name=rundle_name,
+                    num_days=NUM_DAYS,
+                    num_questions=NUM_QUESTIONS,
+                    delay=DELAY,
+                )
+            except RateLimitedError as e:
+                print(f"  Giving up on {rundle_name} for now: {e}")
+                print("  Skipping it -- it will be retried the next time this script runs.")
+                skipped.append(rundle_name)
+                continue
+
+            state["rundles"][rundle_name] = rundle_data
             save_progress(state)
-    except RateLimitedError as e:
-        print(f"\nStopping: {e}")
-        print(f"Progress through the last completed rundle is saved in {DATA_FILE}.")
-        print("Rerun this script later to pick up where it left off.")
-        return
     finally:
         ll.close()
 
     total_players = sum(len(players) for players in state["rundles"].values())
     print(f"\nDone. {total_players} players across {len(state['rundles'])} rundles saved to {DATA_FILE}")
+    if skipped:
+        print(f"{len(skipped)} rundle(s) were skipped due to persistent errors: {', '.join(skipped)}")
+        print("Rerun this script to retry them.")
 
 
 if __name__ == "__main__":

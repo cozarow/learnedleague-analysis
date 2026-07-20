@@ -127,13 +127,20 @@ class LearnedLeagueSession:
     # ------------------------------------------------------------------
     # Fetching (reuses the same authenticated browser context)
     # ------------------------------------------------------------------
-    def get_html(self, url: str, max_retries: int = 5) -> str:
+    def get_html(self, url: str, max_retries: int = 5, validate=None) -> str:
         """
         Navigate to a URL and return the page HTML.
 
-        If the request comes back with an error status (or fails outright),
-        that's treated as a possible rate limit / block: wait 10-15 minutes
-        and retry, up to max_retries times, before raising RateLimitedError.
+        If the request comes back with an error status, fails outright, or
+        fails the optional `validate(html) -> bool` check, that's treated as
+        a possible rate limit / soft block: wait 10-15 minutes and retry, up
+        to max_retries times, before raising RateLimitedError.
+
+        `validate` matters because a block isn't always an HTTP error status
+        -- learnedleague.com has been observed serving a normal-looking
+        200 OK page that's actually a soft rate-limit/interstitial page
+        instead of real content. Without a content check, that looks like
+        success and silently produces bad data instead of retrying.
         """
         self._require_login()
 
@@ -144,24 +151,42 @@ class LearnedLeagueSession:
             except PWError:
                 status = None
 
-            if status is not None and status < 400:
-                return self._page.content()
+            reason = None
+            if status is None or status >= 400:
+                reason = f"status={status}"
+            else:
+                html = self._page.content()
+                if validate is None or validate(html):
+                    return html
+                reason = "response didn't look like the expected page (possible soft block)"
 
             if attempt == max_retries:
-                raise RateLimitedError(
-                    f"Giving up on {url} after {max_retries} retries (last status={status})"
-                )
+                raise RateLimitedError(f"Giving up on {url} after {max_retries} retries ({reason})")
 
             wait_s = random.uniform(10 * 60, 15 * 60)
             print(
-                f"  [possible rate limit] status={status} for {url} -- "
+                f"  [possible rate limit] {reason} for {url} -- "
                 f"sleeping {wait_s / 60:.1f} min before retry {attempt + 1}/{max_retries}"
             )
-            time.sleep(wait_s)
+            remaining = wait_s
+            while remaining > 0:
+                chunk = min(60, remaining)
+                time.sleep(chunk)
+                remaining -= chunk
+                if remaining > 0:
+                    print(f"    ... still waiting ({remaining / 60:.1f} min left)")
 
-    def get_soup(self, url: str, parser: str = "lxml") -> BeautifulSoup:
-        """Navigate to a URL and return a BeautifulSoup object."""
-        return BeautifulSoup(self.get_html(url), parser)
+    def get_soup(self, url: str, parser: str = "lxml", validate=None) -> BeautifulSoup:
+        """
+        Navigate to a URL and return a BeautifulSoup object.
+
+        `validate`, if given, is a function (BeautifulSoup) -> bool checking
+        that the page looks like what was expected; see get_html.
+        """
+        html_validate = None
+        if validate is not None:
+            html_validate = lambda html: validate(BeautifulSoup(html, parser))
+        return BeautifulSoup(self.get_html(url, validate=html_validate), parser)
 
     # ------------------------------------------------------------------
     # Internal

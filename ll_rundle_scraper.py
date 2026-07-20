@@ -113,7 +113,7 @@ def scrape_rundle(
         url = f"{BASE_URL}/match.php?{season}&{day}&{rundle_name}"
         print(f"Fetching match day {day:>2}/{num_days}  {url}")
 
-        soup = ll.get_soup(url)
+        soup = ll.get_soup(url, validate=lambda s: s.find("table", class_="std") is not None)
         day_results = parse_matchday(soup, day)
 
         if not day_results:

@@ -5,4 +5,4 @@ venv/
 .DS_Store
 *.env
 .env.*
-rundle_data.json
+rundle_data.json*
