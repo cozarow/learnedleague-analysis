@@ -6,3 +6,5 @@ venv/
 *.env
 .env.*
 rundle_data.json*
+*.npz
+.ipynb_checkpoints/
