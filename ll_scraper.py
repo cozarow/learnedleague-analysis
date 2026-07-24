@@ -18,8 +18,8 @@ USERNAME = input("LL username: ").strip()
 PASSWORD = getpass.getpass("LL password: ")
 
 # Option B: hard-code (convenient, but don't commit to git)
-# USERNAME = 
-# PASSWORD = 
+# USERNAME =
+# PASSWORD =
 # ──────────────────────────────────────────────────────────────────────
 
 
