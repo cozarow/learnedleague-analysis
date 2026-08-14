@@ -127,13 +127,13 @@ class LearnedLeagueSession:
     # ------------------------------------------------------------------
     # Fetching (reuses the same authenticated browser context)
     # ------------------------------------------------------------------
-    def get_html(self, url: str, max_retries: int = 5, validate=None) -> str:
+    def get_html(self, url: str, max_retries: int = 3, validate=None) -> str:
         """
         Navigate to a URL and return the page HTML.
 
         If the request comes back with an error status, fails outright, or
         fails the optional `validate(html) -> bool` check, that's treated as
-        a possible rate limit / soft block: wait 10-15 minutes and retry, up
+        a possible rate limit / soft block: wait ~5 minutes and retry, up
         to max_retries times, before raising RateLimitedError.
 
         `validate` matters because a block isn't always an HTTP error status
@@ -163,7 +163,7 @@ class LearnedLeagueSession:
             if attempt == max_retries:
                 raise RateLimitedError(f"Giving up on {url} after {max_retries} retries ({reason})")
 
-            wait_s = random.uniform(10 * 60, 15 * 60)
+            wait_s = random.uniform(4.5 * 60, 5.5 * 60)
             print(
                 f"  [possible rate limit] {reason} for {url} -- "
                 f"sleeping {wait_s / 60:.1f} min before retry {attempt + 1}/{max_retries}"

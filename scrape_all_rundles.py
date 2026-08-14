@@ -11,15 +11,15 @@ is saved after every single rundle finishes, so it's safe to interrupt
 If a page request looks like it's being rate-limited or blocked (including
 a "soft" block: a normal-looking 200 OK page that isn't actually the real
 standings page), the underlying session (see ll_session.py) already waits
-10-15 minutes and retries a few times on its own. If a rundle still can't
+~5 minutes and retries a few times on its own. If a rundle still can't
 get through after that, this script logs it, skips that rundle entirely
 (so a partially-blocked fetch never gets saved as if it were complete),
 and moves on to the rest. Skipped rundles are listed at the end and will
 be retried automatically the next time you run this script.
 
-Output format (rundle_data.json):
+Each season is saved to its own file, rundle_data_<season>.json:
     {
-        "season": 108,
+        "season": 109,
         "num_days": 25,
         "num_questions": 6,
         "rundles": {
@@ -34,10 +34,18 @@ mapping in the same shape ll_analysis.py already expects, so within-rundle
 comparisons (e.g. one_pairwise_agreement) just need data["rundles"][name]
 handed straight to the existing functions. For comparisons across the
 whole season, merge the per-rundle dicts together (player abbreviations
-are unique per player, so this is safe).
+are unique per player, so this is safe). Seasons are kept in separate
+files rather than merged together -- see ll_all_rundle_analysis.get_tables,
+which takes a `season` keyword to pick which file/tables to work with.
 
 Usage:
     python scrape_all_rundles.py
+    SEASON=109 python scrape_all_rundles.py   # override the season below
+
+Credentials are normally entered interactively, but can also be supplied
+via the LL_USERNAME / LL_PASSWORD environment variables (e.g. to run this
+unattended/in the background without typing a password into a terminal
+someone else can see).
 """
 
 import getpass
@@ -48,11 +56,11 @@ from ll_session import LearnedLeagueSession, RateLimitedError
 from ll_rundle_scraper import discover_rundles, scrape_rundle, NUM_DAYS, NUM_QUESTIONS
 
 # ── Config ────────────────────────────────────────────────────────────
-SEASON = 108
+SEASON = int(os.environ.get("LL_SEASON", 109))
 DELAY  = 0.4  # seconds between match-day requests within a rundle
 # ──────────────────────────────────────────────────────────────────────
 
-DATA_FILE = os.path.join(os.path.dirname(__file__), "rundle_data.json")
+DATA_FILE = os.path.join(os.path.dirname(__file__), f"rundle_data_{SEASON}.json")
 
 
 def load_progress() -> dict:
@@ -89,8 +97,8 @@ def save_progress(state: dict):
 
 
 def main():
-    username = input("LL username: ").strip()
-    password = getpass.getpass("LL password: ")
+    username = os.environ.get("LL_USERNAME") or input("LL username: ").strip()
+    password = os.environ.get("LL_PASSWORD") or getpass.getpass("LL password: ")
 
     state = load_progress()
 

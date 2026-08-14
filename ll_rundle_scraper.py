@@ -19,14 +19,11 @@ Example output:
     }
 """
 
-import getpass
+import re
 import time
 from ll_session import LearnedLeagueSession
 
 # ── Config ─────────────────────────────────────────────────────────────────────
-USERNAME = input("LL username: ").strip()
-PASSWORD = getpass.getpass("LL password: ")
-
 SEASON      = 108          # e.g. 108 for LL108
 NUM_DAYS    = 25           # match days per season
 NUM_QUESTIONS = 6          # questions per match day
@@ -139,6 +136,14 @@ def scrape_rundle(
     return all_data
 
 
+# A real rundle name always has a "<tier>_..." prefix, e.g. "B_Nebula",
+# "C_Ember_Div_2", or "R_Div_45" (Rookie divisions have no league name, just
+# a division number). The allrundles.php page also links to other things
+# (e.g. a bare "Aloha" with no tier prefix/underscore at all) that match the
+# /standings.php?... URL prefix but aren't rundles; skip those.
+_RUNDLE_NAME_RE = re.compile(r"^[A-Za-z0-9]+_[A-Za-z0-9_]+$")
+
+
 def discover_rundles(ll: LearnedLeagueSession, season: int) -> list:
     """
     Discover every rundle name for a season (e.g. "A_Aloha", "B_Andromeda", ...)
@@ -146,11 +151,12 @@ def discover_rundles(ll: LearnedLeagueSession, season: int) -> list:
     """
     soup = ll.get_soup(f"{BASE_URL}/allrundles.php?{season}")
     prefix = f"/standings.php?{season}&"
-    return sorted({
+    names = {
         a["href"][len(prefix):]
         for a in soup.find_all("a", href=True)
         if a["href"].startswith(prefix)
-    })
+    }
+    return sorted(n for n in names if _RUNDLE_NAME_RE.match(n))
 
 
 def print_summary(data: dict):
@@ -166,6 +172,13 @@ def print_summary(data: dict):
 
 
 if __name__ == "__main__":
+    import getpass
+    import json
+    import os
+
+    USERNAME = os.environ.get("LL_USERNAME") or input("LL username: ").strip()
+    PASSWORD = os.environ.get("LL_PASSWORD") or getpass.getpass("LL password: ")
+
     ll = LearnedLeagueSession(headless=False)
     ll.login(USERNAME, PASSWORD)
 
@@ -174,13 +187,6 @@ if __name__ == "__main__":
 
     print_summary(data)
 
-    # data is your dict — use it however you like, e.g.:
-    #   import json
-    #   with open("rundle_data.json", "w") as f:
-    #       json.dump(data, f, indent=2)
-
-    import json
-    import os
-    DATA_FILE = os.path.join(os.path.dirname(__file__), "rundle_data.json")
+    DATA_FILE = os.path.join(os.path.dirname(__file__), f"rundle_data_{SEASON}_single_rundle.json")
     with open(DATA_FILE, "w") as f:
         json.dump(data, f, indent=2)

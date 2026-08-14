@@ -58,11 +58,19 @@ never exceed Q <= a few hundred), ~2.5 GB each for N ~ 36,000 -- easily
 resident in memory. one_pairwise_agreement, average_agreement,
 most_similar_pairs, etc. then just read out of these precomputed tables.
 
-Load data:
-    import json
-    with open("rundle_data.json") as f:
-        data = json.load(f)
-    tables = build_agreement_tables(data)
+Seasons are kept in separate files, rundle_data_<season>.json (see
+scrape_all_rundles.py), and analyzed independently -- there's no
+cross-season comparison. The `season` keyword picks which one to work
+with:
+
+    from ll_all_rundle_analysis import get_tables, most_similar_pairs
+    tables108 = get_tables(season=108)
+    tables109 = get_tables(season=109)
+    most_similar_pairs(tables109, n=10)
+
+`get_tables` caches the built tables per season in-process, since building
+them is the expensive step (~seconds, multi-GB temp arrays); everything
+else here is a cheap lookup against the tables you pass in.
 """
 
 import json
@@ -70,6 +78,8 @@ import os
 from dataclasses import dataclass
 
 import numpy as np
+
+DATA_FILE_TEMPLATE = os.path.join(os.path.dirname(__file__), "rundle_data_{season}.json")
 
 
 # ---------------------------------------------------------------------------
@@ -197,6 +207,32 @@ def build_agreement_tables(data: dict) -> AgreementTables:
         num_questions=q,
         correct_counts=correct_counts,
     )
+
+
+_tables_cache: dict = {}
+
+
+def load_season_data(season: int) -> dict:
+    """Load the raw rundle_data_<season>.json dict for a season."""
+    path = DATA_FILE_TEMPLATE.format(season=season)
+    with open(path) as f:
+        return json.load(f)
+
+
+def get_tables(season: int, use_cache: bool = True) -> AgreementTables:
+    """
+    Load rundle_data_<season>.json and build its AgreementTables (or return
+    the already-built tables from an in-process cache). This is the main
+    entry point for interactive use -- pass season=108 or season=109 to
+    pick which season all downstream analysis functions (pairwise_agreement,
+    most_similar_pairs, etc.) operate on.
+    """
+    if use_cache and season in _tables_cache:
+        return _tables_cache[season]
+    tables = build_agreement_tables(load_season_data(season))
+    if use_cache:
+        _tables_cache[season] = tables
+    return tables
 
 
 def save_agreement_tables(tables: AgreementTables, path: str) -> None:
@@ -394,6 +430,66 @@ def average_agreement(tables: AgreementTables, rundle: str = None, tier: str = N
     return result
 
 
+def top_agreement(tables: AgreementTables, rundle: str = None, tier: str = None,
+                   min_non_forfeit: int = 150, min_correct: int = 15) -> list:
+    """
+    For each qualifying player in scope, their highest pairwise agreement
+    fraction with any other qualifying player in scope (i.e. the fraction
+    from that player's most_similar_player). Returns a list of
+    ((rundle, player_name), max_or_None) sorted descending (None last).
+
+    To get the average/minimum top agreement across scope:
+        vals = [v for _, v in top_agreement(tables) if v is not None]
+        avg_top = sum(vals) / len(vals)
+        min_top = min(vals)   # equivalently vals[-1], since sorted descending
+
+    min_non_forfeit: only include players who themselves have at least
+    this many non-forfeit answers (default: tables.num_questions, i.e. no
+    forfeits at all).
+    min_correct: only include players who themselves answered at least
+    this many questions correctly (default 15) -- filters out rows that
+    are all-0 rather than genuinely forfeited, which would otherwise look
+    spuriously "similar" to other low scorers.
+    """
+    idxs = _resolve_scope(tables, rundle, tier)
+    idxs = _filter_players(tables, idxs, min_non_forfeit, min_correct)
+    agree = tables.agree[np.ix_(idxs, idxs)].astype(np.float32)
+    valid = tables.valid[np.ix_(idxs, idxs)].astype(np.float32)
+
+    frac = np.full(agree.shape, np.nan, dtype=np.float32)
+    np.divide(agree, valid, out=frac, where=valid > 0)
+    np.fill_diagonal(frac, np.nan)
+
+    with np.errstate(invalid="ignore"):
+        row_max = np.nanmax(frac, axis=1)
+
+    result = [
+        (tables.labels[idxs[k]], None if np.isnan(row_max[k]) else float(row_max[k]))
+        for k in range(len(idxs))
+    ]
+    result.sort(key=lambda x: (x[1] is None, -(x[1] if x[1] is not None else 0.0)))
+    return result
+
+
+def most_similar_player(tables: AgreementTables, player: str, rundle: str = None,
+                         scope_rundle: str = None, scope_tier: str = None,
+                         min_non_forfeit: int = 150, min_correct: int = 15):
+    """
+    The single other player with the highest pairwise agreement fraction
+    with `player` in scope (default: the whole season) -- i.e. the top
+    entry of one_pairwise_agreement. Returns ((rundle, player_name),
+    fraction), or None if no other player in scope has a valid comparison.
+
+    min_non_forfeit / min_correct: see one_pairwise_agreement.
+    """
+    matches = one_pairwise_agreement(
+        tables, player, rundle=rundle,
+        scope_rundle=scope_rundle, scope_tier=scope_tier,
+        min_non_forfeit=min_non_forfeit, min_correct=min_correct,
+    )
+    return matches[0] if matches else None
+
+
 def _top_pairs(tables: AgreementTables, idxs: np.ndarray, n: int, largest: bool) -> list:
     m = len(idxs)
     if m < 2:
@@ -489,18 +585,15 @@ def agreement_dict_for_rundle(tables: AgreementTables, rundle: str) -> dict:
 
 
 if __name__ == "__main__":
-    DATA_FILE = os.path.join(os.path.dirname(__file__), "rundle_data.json")
-    with open(DATA_FILE) as f:
-        data = json.load(f)
-
-    tables = build_agreement_tables(data)
-    print(f"Built agreement tables for {len(tables)} (rundle, player) rows.\n")
+    SEASON = 109
+    tables = get_tables(season=SEASON)
+    print(f"LL{SEASON}: built agreement tables for {len(tables)} (rundle, player) rows.\n")
 
     # --- Whole-season leaders/laggards by average agreement ---
-    avgs = average_agreement(tables)
-    print("Top 10 average agreement (whole season):")
-    for label, avg in avgs[:10]:
-        print(f"  {label[1]:<14} ({label[0]:<12}) {avg:.1%}" if avg is not None else f"  {label} n/a")
+    # avgs = average_agreement(tables)
+    # print("Top 10 average agreement (whole season):")
+    # for label, avg in avgs[:10]:
+    #     print(f"  {label[1]:<14} ({label[0]:<12}) {avg:.1%}" if avg is not None else f"  {label} n/a")
 
     # --- Example: single rundle, cheap and exact like ll_analysis.py ---
     example_rundle = tables.labels[0][0]
@@ -508,6 +601,8 @@ if __name__ == "__main__":
     for label, avg in average_agreement(tables, rundle=example_rundle):
         print(f"  {label[1]:<14} {avg:.1%}" if avg is not None else f"  {label[1]} n/a")
 
-    print(f"\nMost similar pairs within {example_rundle}:")
-    for (a, b), val in most_similar_pairs(tables, n=5, rundle=example_rundle):
-        print(f"  {a[1]} & {b[1]}: {val:.1%}")
+    # print(f"\nMost similar pairs within {example_rundle}:")
+    # for (a, b), val in most_similar_pairs(tables, n=5, rundle=example_rundle):
+    #     print(f"  {a[1]} & {b[1]}: {val:.1%}")
+
+    print(most_similar_player(tables, "OzarowC", min_non_forfeit=126))

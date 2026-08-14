@@ -1,0 +1,142 @@
+# rundle_name	url	corrected_name (fill this in, then run apply_o_fixes.py)
+A_Boardwalk	https://learnedleague.com/match.php?108&1&A_Boardwalk	O'SheaT
+A_Cerulean	https://learnedleague.com/match.php?108&1&A_Cerulean	O'HaraW
+A_Foothills	https://learnedleague.com/match.php?108&1&A_Foothills	O'LearyR0
+A_Foundry	https://learnedleague.com/match.php?108&1&A_Foundry	O'NeillM3
+A_Juniper	https://learnedleague.com/match.php?108&1&A_Juniper	O'NeillC2
+A_Lyceum	https://learnedleague.com/match.php?108&1&A_Lyceum	O'DonnellJ2
+A_Meridian	https://learnedleague.com/match.php?108&1&A_Meridian	O'MalleyD
+A_Mesa	https://learnedleague.com/match.php?108&1&A_Mesa	O'ConnorT
+A_Morningstar	https://learnedleague.com/match.php?108&1&A_Morningstar	O'NeillR
+A_Ocean	https://learnedleague.com/match.php?108&1&A_Ocean	O'MalleyK
+A_Savanna	https://learnedleague.com/match.php?108&1&A_Savanna	O'NealP
+A_Seneca	https://learnedleague.com/match.php?108&1&A_Seneca	O'BrienMS
+A_Spring	https://learnedleague.com/match.php?108&1&A_Spring		COLLISION: [('O', "loanes'"), ('O', "rourkels'")]
+A_Tidewater	https://learnedleague.com/match.php?108&1&A_Tidewater	O'GradyS
+A_Veldt	https://learnedleague.com/match.php?108&1&A_Veldt	O'SullivanC
+A_Vista	https://learnedleague.com/match.php?108&1&A_Vista	O'NeillD16
+A_Waterfront	https://learnedleague.com/match.php?108&1&A_Waterfront	O'LoughlinS
+A_Windward	https://learnedleague.com/match.php?108&1&A_Windward	O'BrianP
+B_Arctic	https://learnedleague.com/match.php?108&1&B_Arctic	O'SheaA
+B_Bayou	https://learnedleague.com/match.php?108&1&B_Bayou	O'QuinnE
+B_Cherry	https://learnedleague.com/match.php?108&1&B_Cherry	O'BrienDF
+B_Commonwealth	https://learnedleague.com/match.php?108&1&B_Commonwealth	O'HeronB
+B_Ember	https://learnedleague.com/match.php?108&1&B_Ember	O'MalleyR
+B_Foundry	https://learnedleague.com/match.php?108&1&B_Foundry	O'ConnorCR
+B_Garden	https://learnedleague.com/match.php?108&1&B_Garden	O'ConnorC2
+B_Juniper	https://learnedleague.com/match.php?108&1&B_Juniper	O'LearyC
+B_Kaleidoscope	https://learnedleague.com/match.php?108&1&B_Kaleidoscope	O'SullivanJ
+B_Orange	https://learnedleague.com/match.php?108&1&B_Orange	O'BrienB
+B_Redwoods	https://learnedleague.com/match.php?108&1&B_Redwoods	O'BrienC5
+B_Skyline	https://learnedleague.com/match.php?108&1&B_Skyline	O'ConnorP3
+B_Zenith	https://learnedleague.com/match.php?108&1&B_Zenith	O'BrienJ
+C_Atlantic_Div_2	https://learnedleague.com/match.php?108&1&C_Atlantic_Div_2	O'QuinnK
+C_Bayou_Div_1	https://learnedleague.com/match.php?108&1&C_Bayou_Div_1	O'DonnellMJ
+C_Central_Div_2	https://learnedleague.com/match.php?108&1&C_Central_Div_2	O'NeillD3
+C_Cherry_Div_1	https://learnedleague.com/match.php?108&1&C_Cherry_Div_1	O'HigginsF
+C_Coral_Div_1	https://learnedleague.com/match.php?108&1&C_Coral_Div_1	O'KeefeT
+C_Delta_Div_2	https://learnedleague.com/match.php?108&1&C_Delta_Div_2	O'ConnorL3
+C_Denali_Div_2	https://learnedleague.com/match.php?108&1&C_Denali_Div_2	O'DellM
+C_Foundry	https://learnedleague.com/match.php?108&1&C_Foundry	O'ConnellJ99
+C_Gulf_Div_2	https://learnedleague.com/match.php?108&1&C_Gulf_Div_2	O'HaraK
+C_Harbor_Div_2	https://learnedleague.com/match.php?108&1&C_Harbor_Div_2		COLLISION: [('O', "nealm'"), ('O', "neals'")]
+C_Isthmus	https://learnedleague.com/match.php?108&1&C_Isthmus		COLLISION: [('O', "connort2'"), ('O', 'grady')]
+C_Keystone	https://learnedleague.com/match.php?108&1&C_Keystone	O'LaughlinJ
+C_Labyrinth	https://learnedleague.com/match.php?108&1&C_Labyrinth	O'ShaughnessyM
+C_Lyceum_Div_1	https://learnedleague.com/match.php?108&1&C_Lyceum_Div_1	O'DonnellM4
+C_Lyceum_Div_2	https://learnedleague.com/match.php?108&1&C_Lyceum_Div_2	O'KeefeR
+C_Maritime	https://learnedleague.com/match.php?108&1&C_Maritime	O'GradyR
+C_Mojave_Div_2	https://learnedleague.com/match.php?108&1&C_Mojave_Div_2	O'BrienM2
+C_Monolith_Div_1	https://learnedleague.com/match.php?108&1&C_Monolith_Div_1	O'DonnellM2
+C_Olympic	https://learnedleague.com/match.php?108&1&C_Olympic	O'SheaR24
+C_Orchard_Div_2	https://learnedleague.com/match.php?108&1&C_Orchard_Div_2	O'BrienC
+C_Patagonia_Div_1	https://learnedleague.com/match.php?108&1&C_Patagonia_Div_1		COLLISION: [('O', "neillb'"), ('O', "neillpd'")]
+C_Pioneer_Div_1	https://learnedleague.com/match.php?108&1&C_Pioneer_Div_1	O'KeefeME
+C_Pioneer_Div_2	https://learnedleague.com/match.php?108&1&C_Pioneer_Div_2	O'ConnorK42
+C_Rubicon_Div_2	https://learnedleague.com/match.php?108&1&C_Rubicon_Div_2	O'GeenA
+C_Sahara_Div_2	https://learnedleague.com/match.php?108&1&C_Sahara_Div_2	O'BrienJ5
+C_Sakura_Div_1	https://learnedleague.com/match.php?108&1&C_Sakura_Div_1	O'ReillyL
+C_Serengeti_Div_2	https://learnedleague.com/match.php?108&1&C_Serengeti_Div_2	O'HaraEC
+C_Sugarloaf_Div_1	https://learnedleague.com/match.php?108&1&C_Sugarloaf_Div_1	O'BrienP
+C_Sunrise	https://learnedleague.com/match.php?108&1&C_Sunrise	O'SheaR33
+C_Sycamore_Div_2	https://learnedleague.com/match.php?108&1&C_Sycamore_Div_2	O'BrienC2
+C_Zephyr_Div_1	https://learnedleague.com/match.php?108&1&C_Zephyr_Div_1	O'ConnorB
+D_Archipelago_Div_1	https://learnedleague.com/match.php?108&1&D_Archipelago_Div_1	O'NeilCarey
+D_Arctic_Div_1	https://learnedleague.com/match.php?108&1&D_Arctic_Div_1	O'SheaC
+D_Bayou_Div_2	https://learnedleague.com/match.php?108&1&D_Bayou_Div_2	O'ConnellR2
+D_Byzantium_Div_2	https://learnedleague.com/match.php?108&1&D_Byzantium_Div_2		COLLISION: [('O', "neilln'"), ('O', "neillrm'")]
+D_Canyon_Div_2	https://learnedleague.com/match.php?108&1&D_Canyon_Div_2	O'LoughlinJ
+D_Centennial_Div_2	https://learnedleague.com/match.php?108&1&D_Centennial_Div_2	O'ConnorL2
+D_Citadel_Div_2	https://learnedleague.com/match.php?108&1&D_Citadel_Div_2	O'ConnorM
+D_Cove_Div_1	https://learnedleague.com/match.php?108&1&D_Cove_Div_1	O'ConnorS4
+D_Delta_Div_1	https://learnedleague.com/match.php?108&1&D_Delta_Div_1	O'BrienP2
+D_Delta_Div_2	https://learnedleague.com/match.php?108&1&D_Delta_Div_2	O'ConnorK5
+D_Denali_Div_2	https://learnedleague.com/match.php?108&1&D_Denali_Div_2	O'SheaJ
+D_Eclipse_Div_1	https://learnedleague.com/match.php?108&1&D_Eclipse_Div_1	O'SheaA1
+D_Elysium_Div_1	https://learnedleague.com/match.php?108&1&D_Elysium_Div_1	O'BrienB22
+D_Evergreen_Div_1	https://learnedleague.com/match.php?108&1&D_Evergreen_Div_1	O'KeefeB
+D_Fjord_Div_2	https://learnedleague.com/match.php?108&1&D_Fjord_Div_2	O'NeillP2
+D_Forest_Div_2	https://learnedleague.com/match.php?108&1&D_Forest_Div_2	O'RourkeC
+D_Galaxy_Div_2	https://learnedleague.com/match.php?108&1&D_Galaxy_Div_2	O'BrienS
+D_Garden_Div_2	https://learnedleague.com/match.php?108&1&D_Garden_Div_2	O'PhelanB
+D_Highland_Div_1	https://learnedleague.com/match.php?108&1&D_Highland_Div_1	O'RourkeP
+D_Kaleidoscope_Div_2	https://learnedleague.com/match.php?108&1&D_Kaleidoscope_Div_2	O'LearyN2
+D_Labyrinth_Div_2	https://learnedleague.com/match.php?108&1&D_Labyrinth_Div_2	O'NeillT2
+D_Lighthouse_Div_1	https://learnedleague.com/match.php?108&1&D_Lighthouse_Div_1		COLLISION: [('D', "espositoj'"), ('O', "sullivanl'")]
+D_Maritime_Div_1	https://learnedleague.com/match.php?108&1&D_Maritime_Div_1	O'DonnellJ
+D_Mountain_Div_1	https://learnedleague.com/match.php?108&1&D_Mountain_Div_1	O'TooleL
+D_Orchid_Div_2	https://learnedleague.com/match.php?108&1&D_Orchid_Div_2	O'PolkaM
+D_Overlook_Div_1	https://learnedleague.com/match.php?108&1&D_Overlook_Div_1	O'GormanT
+D_Pacific_Div_2	https://learnedleague.com/match.php?108&1&D_Pacific_Div_2	O'HalloranT
+D_Park_Div_1	https://learnedleague.com/match.php?108&1&D_Park_Div_1	O'ConnellL
+D_Pioneer_Div_2	https://learnedleague.com/match.php?108&1&D_Pioneer_Div_2	O'KeefeM
+D_Plateau_Div_2	https://learnedleague.com/match.php?108&1&D_Plateau_Div_2	O'NeillCaitlion
+D_Ravenna_Div_2	https://learnedleague.com/match.php?108&1&D_Ravenna_Div_2	O'DonnellAJ
+D_Sakura_Div_2	https://learnedleague.com/match.php?108&1&D_Sakura_Div_2	O'BrienF
+D_Savanna_Div_2	https://learnedleague.com/match.php?108&1&D_Savanna_Div_2		O'Mahoney-SchwartzD
+D_Taiga_Div_1	https://learnedleague.com/match.php?108&1&D_Taiga_Div_1	O'RourkeJ
+D_Tidewater_Div_2	https://learnedleague.com/match.php?108&1&D_Tidewater_Div_2	O'ConnorJ5
+D_Village_Div_2	https://learnedleague.com/match.php?108&1&D_Village_Div_2	O'DudenT
+D_Willow_Div_2	https://learnedleague.com/match.php?108&1&D_Willow_Div_2	O'MalleyJ4
+D_Woodlands_Div_2	https://learnedleague.com/match.php?108&1&D_Woodlands_Div_2	O'LearyK
+E_Alpine_Div_2	https://learnedleague.com/match.php?108&1&E_Alpine_Div_2	O'BrienD
+E_Arctic_Div_2	https://learnedleague.com/match.php?108&1&E_Arctic_Div_2	O'DonnellKM
+E_Aspen_Div_1	https://learnedleague.com/match.php?108&1&E_Aspen_Div_1	O'DwyerR
+E_Beach_Div_1	https://learnedleague.com/match.php?108&1&E_Beach_Div_1	O'BrienD23
+E_Blue_Div_2	https://learnedleague.com/match.php?108&1&E_Blue_Div_2		COLLISION: [('O', "donnellk3'"), ('O', "keefee'")]
+E_Boardwalk_Div_2	https://learnedleague.com/match.php?108&1&E_Boardwalk_Div_2	O'BrienC3
+E_Citadel_Div_2	https://learnedleague.com/match.php?108&1&E_Citadel_Div_2	O'ConnorC
+E_Coastal_Div_2	https://learnedleague.com/match.php?108&1&E_Coastal_Div_2	O'ConnorR2
+E_Continental_Div_2	https://learnedleague.com/match.php?108&1&E_Continental_Div_2	O'ConnorA
+E_Denali_Div_2	https://learnedleague.com/match.php?108&1&E_Denali_Div_2		COLLISION: [('O', "dellb'"), ('O', "dells'")]
+E_Foothills_Div_1	https://learnedleague.com/match.php?108&1&E_Foothills_Div_1	O'LearyH
+E_Galaxy_Div_2	https://learnedleague.com/match.php?108&1&E_Galaxy_Div_2		COLLISION: [('O', "brienm4'"), ('O', "briens2'")]
+E_Geyser_Div_2	https://learnedleague.com/match.php?108&1&E_Geyser_Div_2	O'ConnorJ4
+E_Horizon_Div_1	https://learnedleague.com/match.php?108&1&E_Horizon_Div_1		COLLISION: [('O', "gradyt'"), ('O', "neillr2'")]
+E_Jungle_Div_2	https://learnedleague.com/match.php?108&1&E_Jungle_Div_2	O'NeillA
+E_Kaleidoscope_Div_2	https://learnedleague.com/match.php?108&1&E_Kaleidoscope_Div_2	O'LearyO
+E_Lagoon_Div_2	https://learnedleague.com/match.php?108&1&E_Lagoon_Div_2		COLLISION: [('O', "connorcozy'"), ('O', "neills4'")]
+E_Memorial_Div_2	https://learnedleague.com/match.php?108&1&E_Memorial_Div_2	O'ConnellL3
+E_Nebula_Div_2	https://learnedleague.com/match.php?108&1&E_Nebula_Div_2	O'LearyA
+E_Nighthawk_Div_2	https://learnedleague.com/match.php?108&1&E_Nighthawk_Div_2	O'KeefeS2
+E_Ocean_Div_1	https://learnedleague.com/match.php?108&1&E_Ocean_Div_1	O'MalleyJ3
+E_Olympic_Div_1	https://learnedleague.com/match.php?108&1&E_Olympic_Div_1	O'DonoghueA
+E_Oxbow_Div_2	https://learnedleague.com/match.php?108&1&E_Oxbow_Div_2	O'MalleyJ2
+E_Plaza_Div_1	https://learnedleague.com/match.php?108&1&E_Plaza_Div_1	O'KeefeM2
+E_Riviera_Div_2	https://learnedleague.com/match.php?108&1&E_Riviera_Div_2	O'BoyleR
+E_Rubicon_Div_1	https://learnedleague.com/match.php?108&1&E_Rubicon_Div_1		COLLISION: [('O', "donovanj'"), ('O', "donovank'")]
+E_Tundra_Div_1	https://learnedleague.com/match.php?108&1&E_Tundra_Div_1	O'HareR
+E_Valhalla_Div_1	https://learnedleague.com/match.php?108&1&E_Valhalla_Div_1	O'ConnellB
+E_Vista_Div_2	https://learnedleague.com/match.php?108&1&E_Vista_Div_2	O'KeefeD1
+E_Volcano_Div_1	https://learnedleague.com/match.php?108&1&E_Volcano_Div_1	O'ConnorPVolcano
+E_Wilderness_Div_1	https://learnedleague.com/match.php?108&1&E_Wilderness_Div_1	O'DonnellCM
+E_Willow_Div_2	https://learnedleague.com/match.php?108&1&E_Willow_Div_2	O'BrienM7
+E_Windward_Div_1	https://learnedleague.com/match.php?108&1&E_Windward_Div_1		COLLISION: [('O', "connord'"), ('O', "farrellb'")]
+R_Div_16	https://learnedleague.com/match.php?108&1&R_Div_16	O'BrienJ6
+R_Div_20	https://learnedleague.com/match.php?108&1&R_Div_20	O'DonoghueJ
+R_Div_39	https://learnedleague.com/match.php?108&1&R_Div_39	O'DonnellT
+R_Div_44	https://learnedleague.com/match.php?108&1&R_Div_44	O'KeefeJ5
+R_Div_45	https://learnedleague.com/match.php?108&1&R_Div_45	O'NeillM9
+R_Div_46	https://learnedleague.com/match.php?108&1&R_Div_46	O'BrienC1
+R_Div_61	https://learnedleague.com/match.php?108&1&R_Div_61	O'NealL
+R_Div_63	https://learnedleague.com/match.php?108&1&R_Div_63	O'LearyH21
